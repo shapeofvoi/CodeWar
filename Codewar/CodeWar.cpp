@@ -477,3 +477,38 @@ std::string add(const std::string& a, const std::string& b) {
 
     return res;
 }
+
+vector< vector<long long> > cofactors(vector<vector<long long>> m, int a, int b){
+    // 输入矩阵，和索引i,j得到其代数余子式
+    int rows = m.size();
+    vector<vector<long long>> res;
+    for(int i = 0; i < rows; ++i){
+        if(i == a) continue;
+        vector<long long> row_temp;
+
+        for (int j = 0; j < rows; ++j){
+            if(j == b) continue;
+            row_temp.push_back(m[i][j]);
+        }
+
+        res.push_back(row_temp);
+    }
+    return res;
+}
+
+long long determinant(vector< vector<long long> > m){
+    // 计算行列式的结果 用递归
+    int n = m.size();
+    if (n == 1) return m[0][0];
+    else if (n == 2)
+        return m[0][0]*m[1][1] - m[0][1]*m[1][0];
+    else{
+        long long sum = 0;
+        for(int i = 0; i < n; ++i){
+            int sign = ((0 + i) % 2 == 0) ? 1:-1;
+            sum += sign * m[0][i] * determinant(cofactors(m, 0, i));
+        }
+        return sum;
+    }
+}
+
